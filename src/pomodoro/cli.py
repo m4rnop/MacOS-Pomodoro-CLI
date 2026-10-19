@@ -1,6 +1,7 @@
 import argparse
 
 from pomodoro.timer import countdown
+from pomodoro.state import load_state,save_state
 
 def main():
     parser = argparse.ArgumentParser(
@@ -10,7 +11,7 @@ def main():
 
     parser.add_argument(
         "command", 
-        choices=["hello", "start"]
+        choices=["hello", "start", "status"]
     )
 
     parser.add_argument(
@@ -30,5 +31,15 @@ def main():
 
         try:
             countdown(args.seconds)
+            
         except KeyboardInterrupt:
+            save_state({
+                "status": "idle",
+                "duration": args.seconds
+            })
+            
             print("\nSession cancelled")
+
+    elif args.command == "status":
+        state = load_state()
+        print(f"Pomodoro status: {state['status']}")

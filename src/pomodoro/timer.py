@@ -1,7 +1,14 @@
 import time
 import math
 
+from pomodoro.state import save_state
+
 def countdown(seconds):
+    save_state({
+        "status": "running",
+        "duration": seconds
+    })
+
     deadline = time.monotonic() + seconds
 
     while True:
@@ -16,6 +23,11 @@ def countdown(seconds):
 
         time.sleep(min(0.1, remaining))
 
+    save_state({
+            "status": "completed",
+            "duration": seconds
+        })
+    
     print("\nSession completed!")
 
             
